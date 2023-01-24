@@ -1,0 +1,11 @@
+import camelot, glob, os
+import pandas as pd
+pdfopen = glob.glob("*.pdf") #open any pdf in the root folder
+pdfread = camelot.read_pdf(pdfopen[0], flavor='stream', pages='all', strip_text='.\r\n', row_tol=7) #read PDF using Camelot
+csvcreate = open('output.csv', 'w') #create CSV file
+a=0
+while (a<len(pdfread)):
+	pdfread[a].to_csv("output.csv", mode='a')
+	a += 1
+df=pd.read_csv("output.csv", header=0, index_col=[3], usecols=[0,1,2,3]) #read columns 0-3 using 3 as index one 
+df.dropna().sort_index().to_csv("output.csv", sep=';', header=False) #remove empty rows, sort and write as CSV file separated by ;
